@@ -1,0 +1,39 @@
+@page "/products"
+@using ShopEase
+
+<h3>Products</h3>
+
+@if (Products == null || !Products.Any())
+{
+    <p>No products available.</p>
+}
+else
+{
+    <div class="product-list">
+        @foreach (var product in Products)
+        {
+            <ProductCard Product="product" OnAddToCart="HandleAddToCart" />
+        }
+    </div>
+}
+
+@code {
+    private List<Product> Products = new();
+
+    protected override void OnInitialized()
+    {
+        // Load products (mock data for now)
+        Products = new List<Product>
+        {
+            new Product { ProductID = 1, Name = "Laptop", Price = 999.99m, Category = "Electronics" },
+            new Product { ProductID = 2, Name = "Headphones", Price = 199.99m, Category = "Accessories" },
+            new Product { ProductID = 3, Name = "Book", Price = 15.50m, Category = "Books" }
+        };
+    }
+
+    private void HandleAddToCart(Product product)
+    {
+        Console.WriteLine($"Product added to cart: {product.Name}");
+        // Logic to add the product to the cart can be implemented here
+    }
+}

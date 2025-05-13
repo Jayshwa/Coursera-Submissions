@@ -1,0 +1,25 @@
+@using ShopEase
+@using Microsoft.AspNetCore.Components
+
+<div class="product-card" role="region" aria-labelledby="product-@Product.ProductID">
+    <h4 id="product-@Product.ProductID">@Product.Name</h4>
+    <p>Price: @Product.Price.ToString("C")</p>
+    <p>Category: @Product.Category</p>
+    <button class="btn btn-primary" @onclick="AddToCart" aria-label="Add @Product.Name to cart">Add to Cart</button>
+</div>
+
+@code {
+    [Parameter]
+    public Product Product { get; set; }
+
+    [Parameter]
+    public EventCallback<Product> OnAddToCart { get; set; }
+
+    private async Task AddToCart()
+    {
+        if (OnAddToCart.HasDelegate)
+        {
+            await OnAddToCart.InvokeAsync(Product);
+        }
+    }
+}

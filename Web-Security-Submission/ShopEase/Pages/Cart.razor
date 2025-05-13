@@ -1,0 +1,51 @@
+@page "/cart"
+@inject ShopEase.ApplicationDbContext DbContext
+
+<h3>Cart</h3>
+
+@if (CartItems == null || !CartItems.Any())
+{
+    <p>Your cart is empty.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in CartItems)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Price.ToString("C")</td>
+                    <td>@item.Category</td>
+                    <td>
+                        <button class="btn btn-danger" @onclick="() => RemoveProduct(item.ProductID)">Remove</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Product> CartItems = new();
+
+    protected override void OnInitialized()
+    {
+        // Load cart items from the database
+        CartItems = DbContext.GetProducts();
+    }
+
+    private void RemoveProduct(int productId)
+    {
+        DbContext.RemoveProduct(productId);
+        CartItems = DbContext.GetProducts(); // Refresh the cart
+    }
+}
